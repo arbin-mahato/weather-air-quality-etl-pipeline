@@ -16,3 +16,6 @@ Thumbs.db
 
 # ── OS temp files ─────────────────────────────────────────────────────────────
 *.log
+
+# Internal Documentation
+PROJECT_EXPLAINED.md
