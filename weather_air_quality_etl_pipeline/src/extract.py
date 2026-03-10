@@ -24,8 +24,8 @@ def fetch_weather_data(city, start_date, end_date):
     url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{city}/{start_date}/{end_date}?unitGroup=metric&include=days&key={Config.VISUALCROSSING_API_KEY}&contentType=json"
 
     try:
-        # Make the API request
-        response = requests.get(url)
+        # Make the API request — 30 s timeout prevents the ETL from hanging
+        response = requests.get(url, timeout=30)
         response.raise_for_status()  # Raise an exception for any error response
 
         # Parse the response JSON
@@ -34,11 +34,11 @@ def fetch_weather_data(city, start_date, end_date):
 
     except requests.exceptions.HTTPError as http_err:
         logger.error(f"HTTP error occurred: {http_err}")
-        sys.exit(1)
+        raise
 
     except Exception as err:
         logger.error(f"An error occurred: {err}")
-        sys.exit(1)
+        raise
 
 def fetch_historical_air_quality_data(city, state, country, start_date, end_date):
     """

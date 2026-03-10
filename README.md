@@ -2,7 +2,7 @@
 
 ## Overview
 
-An end-to-end data engineering project that extracts daily weather data from the VisualCrossing API, transforms and cleans it with pandas, and loads it into PostgreSQL. A Flask REST API serves the data to a React dashboard with live charts and a built-in ETL control panel.
+An end-to-end data engineering project that extracts daily weather data from the VisualCrossing API, transforms and cleans it with pandas, and loads it into PostgreSQL. A Flask REST API serves the data to a React dashboard with live charts, a light/dark mode toggle, and a built-in ETL control panel.
 
 **Stack:** Python · PostgreSQL · Flask · APScheduler · React · Vite · Recharts · Tailwind CSS
 
@@ -17,6 +17,8 @@ weather_air_quality_etl_pipeline/  ← ETL pipeline + Flask backend
 ├── requirements.txt               # Python dependencies
 ├── .env                           # API keys, DB credentials & city list (not committed)
 ├── .env.example                   # Safe template — copy to .env and fill in values
+├── _config.yml                    # GitHub Pages config (logo + theme)
+├── ETL.png                        # ETL architecture diagram (used as GH Pages logo)
 ├── src/
 │   ├── config.py                  # Config loader — parses CITIES from .env
 │   ├── extract.py                 # Fetches daily data from VisualCrossing API
@@ -33,7 +35,9 @@ weather-react-dashboard/           ← React frontend
 │   ├── pages/                     # Overview, Temperature, Precipitation, Wind,
 │   │                              #   DataExplorer, Pipeline pages
 │   ├── components/                # ChartCard, KPICard, Header (city selector), …
-│   ├── contexts/WeatherContext.jsx # City state + API/static fallback
+│   ├── contexts/
+│   │   ├── WeatherContext.jsx      # City state + API/static fallback
+│   │   └── ThemeContext.jsx        # Light/dark mode — persisted in localStorage
 │   ├── hooks/useWeatherData.js
 │   ├── services/api.js            # Fetch wrapper for Flask API (city-aware)
 │   └── data/weatherData.js        # Static fallback dataset (offline mode)
@@ -44,19 +48,19 @@ weather-react-dashboard/           ← React frontend
 
 ## Technologies
 
-| Layer | Technology |
-|---|---|
-| Language | Python 3.9+ |
-| Data processing | pandas, NumPy |
-| Database | PostgreSQL |
-| ORM / queries | SQLAlchemy, psycopg2 |
-| API server | Flask 3, flask-cors |
+| Layer             | Technology                  |
+| ----------------- | --------------------------- |
+| Language          | Python 3.9+                 |
+| Data processing   | pandas, NumPy               |
+| Database          | PostgreSQL                  |
+| ORM / queries     | SQLAlchemy, psycopg2        |
+| API server        | Flask 3, flask-cors         |
 | Background worker | APScheduler (24 h interval) |
-| Weather data | VisualCrossing API |
-| Frontend | React 18, Vite 6 |
-| Charts | Recharts |
-| Styling | Tailwind CSS, Framer Motion |
-| Icons | Lucide React |
+| Weather data      | VisualCrossing API          |
+| Frontend          | React 18, Vite 6            |
+| Charts            | Recharts                    |
+| Styling           | Tailwind CSS, Framer Motion |
+| Icons             | Lucide React                |
 
 ---
 
@@ -65,15 +69,19 @@ weather-react-dashboard/           ← React frontend
 The pipeline runs for every city defined in the `CITIES` environment variable (100+ cities by default). `app.py` loops through all cities sequentially and reports per-city progress via the `/api/pipeline/status` endpoint.
 
 ### 1. Extract
+
 `src/extract.py` calls the VisualCrossing Timeline API for a given city and date range, returning a JSON payload of daily observations.
 
 ### 2. Transform
+
 `src/transform.py` cleans the raw payload:
+
 - Forward-fills missing values
 - Selects and renames relevant columns: `date`, `temperature`, `feels_like`, `humidity`, `precipitation`, `wind_speed`
 - Ensures correct dtypes and rounds numeric fields
 
 ### 3. Load
+
 `src/load.py` writes each city's cleaned DataFrame into the shared `weather_data` table in PostgreSQL. A `city` column identifies the source city. Rows are upserted via `INSERT … ON CONFLICT (city, date) DO UPDATE`, so re-running the ETL never creates duplicates.
 
 ---
@@ -82,21 +90,22 @@ The pipeline runs for every city defined in the `CITIES` environment variable (1
 
 Started by `python app.py` on **port 8000**. APScheduler re-runs the full multi-city ETL every 24 hours in the background.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/health` | Server liveness check |
-| GET | `/api/cities` | List of all configured cities (`[{name, location}, …]`) |
-| GET | `/api/weather` | Weather rows (`?city=Athens`, `?month=YYYY-MM`, `?limit=N`) |
-| GET | `/api/weather/stats` | Aggregate stats — avg/max/min temp, precip, wind (`?city=`) |
-| GET | `/api/weather/monthly` | Per-month aggregations (`?city=`) |
-| GET | `/api/pipeline/status` | ETL state: `status`, `last_run`, `rows_loaded`, `cities_done`, `cities_total`, `current_city`, `next_run` |
-| POST | `/api/pipeline/trigger` | Manually kick off a full ETL run (non-blocking, 202) |
+| Method | Endpoint                | Description                                                                                               |
+| ------ | ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| GET    | `/api/health`           | Server liveness check                                                                                     |
+| GET    | `/api/cities`           | List of all configured cities (`[{name, location}, …]`)                                                   |
+| GET    | `/api/weather`          | Weather rows (`?city=Athens`, `?month=YYYY-MM`, `?limit=N`)                                               |
+| GET    | `/api/weather/stats`    | Aggregate stats — avg/max/min temp, precip, wind (`?city=`)                                               |
+| GET    | `/api/weather/monthly`  | Per-month aggregations (`?city=`)                                                                         |
+| GET    | `/api/pipeline/status`  | ETL state: `status`, `last_run`, `rows_loaded`, `cities_done`, `cities_total`, `current_city`, `next_run` |
+| POST   | `/api/pipeline/trigger` | Manually kick off a full ETL run (non-blocking, 202)                                                      |
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
+
 - Python 3.9+
 - Node.js 18+
 - PostgreSQL running locally

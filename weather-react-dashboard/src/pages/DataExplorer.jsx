@@ -57,7 +57,7 @@ function SortIcon({ col, sortKey, sortDir }) {
 }
 
 export default function DataExplorer() {
-  const { data } = useWeatherData();
+  const { data, city } = useWeatherData();
   const [search, setSearch] = useState("");
   const [month, setMonth] = useState("all");
   const [sortKey, setSortKey] = useState("date");
@@ -105,7 +105,7 @@ export default function DataExplorer() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "ioannina_weather_summer_2024.csv";
+    a.download = `${city.toLowerCase().replace(/ /g, "_")}_weather_summer_2024.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -158,11 +158,26 @@ export default function DataExplorer() {
           {/* Stats */}
           <div
             className="text-xs px-3 py-2 rounded-lg"
-            style={{ background: "rgba(255,255,255,0.05)", color: "#64748b" }}
+            style={{
+              background: "var(--stats-pill-bg)",
+              color: "var(--text-muted)",
+            }}
           >
             Showing{" "}
-            <span className="font-bold text-white">{filtered.length}</span> of{" "}
-            <span className="font-bold text-white">92</span> records
+            <span
+              className="font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {filtered.length}
+            </span>{" "}
+            of{" "}
+            <span
+              className="font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
+              92
+            </span>{" "}
+            records
           </div>
           {/* Export */}
           <button className="btn-primary ml-auto" onClick={handleExport}>
@@ -181,19 +196,22 @@ export default function DataExplorer() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <tr style={{ borderBottom: "1px solid var(--border-surface)" }}>
                 {COLUMNS.map((col) => (
                   <th
                     key={col.key}
                     onClick={() => handleSort(col.key)}
                     className="text-left px-5 py-3.5 cursor-pointer select-none"
-                    style={{ background: "rgba(255,255,255,0.03)" }}
+                    style={{ background: "var(--table-header-bg)" }}
                   >
                     <div className="flex items-center gap-1.5">
                       <span
                         className="text-xs font-semibold uppercase tracking-wider"
                         style={{
-                          color: sortKey === col.key ? "#38bdf8" : "#475569",
+                          color:
+                            sortKey === col.key
+                              ? "#38bdf8"
+                              : "var(--text-secondary)",
                         }}
                       >
                         {col.label}
@@ -217,14 +235,14 @@ export default function DataExplorer() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.2, delay: i * 0.018 }}
                     className="group"
-                    style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}
+                    style={{ borderBottom: "1px solid var(--separator-color)" }}
                   >
                     {COLUMNS.map((col) => (
                       <td
                         key={col.key}
                         className="px-5 py-3 text-sm transition-colors duration-150 group-hover:bg-white/[0.025]"
                         style={{
-                          color: col.color ?? "#e2e8f0",
+                          color: col.color ?? "var(--text-primary)",
                           fontWeight: col.key === "date" ? 600 : 400,
                         }}
                       >
@@ -239,7 +257,7 @@ export default function DataExplorer() {
                   <td
                     colSpan={6}
                     className="px-5 py-12 text-center text-sm"
-                    style={{ color: "#475569" }}
+                    style={{ color: "var(--text-secondary)" }}
                   >
                     No records match your search.
                   </td>
@@ -253,9 +271,12 @@ export default function DataExplorer() {
         {totalPages > 1 && (
           <div
             className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ borderTop: "1px solid var(--border-surface)" }}
           >
-            <span className="text-xs" style={{ color: "#475569" }}>
+            <span
+              className="text-xs"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Page {page} of {totalPages}
             </span>
             <div className="flex items-center gap-2">
@@ -274,7 +295,7 @@ export default function DataExplorer() {
                   style={{
                     background:
                       p === page ? "rgba(56,189,248,0.15)" : "transparent",
-                    color: p === page ? "#38bdf8" : "#64748b",
+                    color: p === page ? "#38bdf8" : "var(--text-muted)",
                     border:
                       p === page
                         ? "1px solid rgba(56,189,248,0.3)"
@@ -314,13 +335,16 @@ export default function DataExplorer() {
             <div key={col.key} className="glass rounded-xl p-3 glass-hover">
               <div
                 className="text-xs font-semibold uppercase tracking-wider mb-2"
-                style={{ color: "#475569", fontSize: "0.62rem" }}
+                style={{ color: "var(--text-secondary)", fontSize: "0.62rem" }}
               >
                 {col.label}
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-xs" style={{ color: "#475569" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Avg
                   </span>
                   <span
@@ -331,16 +355,32 @@ export default function DataExplorer() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs" style={{ color: "#475569" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Min
                   </span>
-                  <span className="text-xs font-semibold text-white">{mn}</span>
+                  <span
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {mn}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs" style={{ color: "#475569" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Max
                   </span>
-                  <span className="text-xs font-semibold text-white">{mx}</span>
+                  <span
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {mx}
+                  </span>
                 </div>
               </div>
             </div>

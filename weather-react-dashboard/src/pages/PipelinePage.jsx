@@ -30,7 +30,7 @@ const STEPS = [
       {
         ok: true,
         label: "VisualCrossing Weather API",
-        note: "92 days · Ioannina, Greece",
+        note: "92 days · all configured cities",
       },
       {
         ok: false,
@@ -73,18 +73,22 @@ const STEPS = [
     border: "rgba(16,185,129,0.25)",
     bg: "rgba(16,185,129,0.07)",
     file: "src/load.py",
-    desc: "Writes the cleaned DataFrame into a PostgreSQL table via SQLAlchemy (replace strategy).",
+    desc: "Upserts the cleaned DataFrame into a PostgreSQL table via SQLAlchemy — INSERT … ON CONFLICT so re-runs never duplicate rows.",
     items: [
       {
         ok: true,
         label: "SQLAlchemy engine",
         note: "psycopg2 · PostgreSQL 14",
       },
-      { ok: true, label: "weather_data table", note: 'if_exists="replace"' },
       {
         ok: true,
-        label: "CSV intermediate",
-        note: "transformed_weather_data.csv",
+        label: "weather_data table",
+        note: "upsert · UNIQUE(city, date)",
+      },
+      {
+        ok: true,
+        label: "Multi-city support",
+        note: "106 cities · city column",
       },
     ],
   },
@@ -180,11 +184,14 @@ export default function PipelinePage() {
       >
         <div className="flex items-center gap-3 mb-2">
           <GitBranch size={20} className="text-sky-400" />
-          <h2 className="text-lg font-bold text-white">
-            Weather & Air Quality ETL Pipeline
+          <h2
+            className="text-lg font-bold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Weather &amp; Air Quality ETL Pipeline
           </h2>
         </div>
-        <p className="text-sm" style={{ color: "#64748b" }}>
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
           Automated data pipeline that extracts meteorological data from
           external APIs, transforms it into a clean analytical dataset, and
           loads it into PostgreSQL for querying and visualisation.
@@ -202,10 +209,16 @@ export default function PipelinePage() {
           <div className="flex items-center gap-3">
             <Activity size={16} className="text-sky-400" />
             <div>
-              <div className="text-sm font-semibold text-white">
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
                 ETL Worker Status
               </div>
-              <div className="text-xs mt-0.5" style={{ color: "#475569" }}>
+              <div
+                className="text-xs mt-0.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Background scheduler · runs every 24 h · data source:{" "}
                 <span
                   style={{ color: source === "api" ? "#10b981" : "#fbbf24" }}
@@ -246,7 +259,7 @@ export default function PipelinePage() {
                     style={{
                       width: 120,
                       height: 6,
-                      background: "rgba(255,255,255,0.08)",
+                      background: "var(--wind-bar-track)",
                     }}
                   >
                     <div
@@ -258,7 +271,10 @@ export default function PipelinePage() {
                       }}
                     />
                   </div>
-                  <span className="text-xs" style={{ color: "#64748b" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {etl.cities_done}/{etl.cities_total} cities
                   </span>
                   {etl.current_city && (
@@ -270,7 +286,10 @@ export default function PipelinePage() {
               )}
 
               {etl.last_run && (
-                <div className="text-xs" style={{ color: "#475569" }}>
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   <span className="text-slate-400 mr-1">Last run:</span>
                   {new Date(etl.last_run).toLocaleString()}
                 </div>
@@ -281,7 +300,10 @@ export default function PipelinePage() {
                 </div>
               )}
               {etl.next_run && (
-                <div className="text-xs" style={{ color: "#475569" }}>
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   <span className="text-slate-400 mr-1">Next:</span>
                   {new Date(etl.next_run).toLocaleString()}
                 </div>
@@ -299,7 +321,7 @@ export default function PipelinePage() {
               )}
             </div>
           ) : (
-            <div className="text-xs" style={{ color: "#475569" }}>
+            <div className="text-xs" style={{ color: "var(--text-secondary)" }}>
               API offline — start Flask backend to see live status
             </div>
           )}
@@ -355,12 +377,15 @@ export default function PipelinePage() {
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex-shrink-0">{step.icon}</div>
                 <div>
-                  <div className="font-bold text-white text-base">
+                  <div
+                    className="font-bold text-base"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {step.title}
                   </div>
                   <div
                     className="text-xs font-mono mt-0.5"
-                    style={{ color: "#475569" }}
+                    style={{ color: "var(--text-secondary)" }}
                   >
                     {step.file}
                   </div>
@@ -368,7 +393,7 @@ export default function PipelinePage() {
               </div>
               <p
                 className="text-xs mb-4 leading-relaxed"
-                style={{ color: "#64748b" }}
+                style={{ color: "var(--text-muted)" }}
               >
                 {step.desc}
               </p>
@@ -388,12 +413,15 @@ export default function PipelinePage() {
                       />
                     )}
                     <div>
-                      <span className="text-xs font-medium text-white">
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {item.label}
                       </span>
                       <span
                         className="text-xs ml-2"
-                        style={{ color: "#475569" }}
+                        style={{ color: "var(--text-secondary)" }}
                       >
                         {item.note}
                       </span>
@@ -455,10 +483,16 @@ export default function PipelinePage() {
               <div className="font-extrabold text-2xl mb-1" style={{ color }}>
                 {value}
               </div>
-              <div className="text-xs font-semibold text-white mb-0.5">
+              <div
+                className="text-xs font-semibold mb-0.5"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {label}
               </div>
-              <div className="text-xs" style={{ color: "#475569" }}>
+              <div
+                className="text-xs"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 {note}
               </div>
             </div>
@@ -477,7 +511,7 @@ export default function PipelinePage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <tr style={{ borderBottom: "1px solid var(--border-surface)" }}>
                 {[
                   "Month",
                   "Days",
@@ -492,7 +526,7 @@ export default function PipelinePage() {
                   <th
                     key={h}
                     className="text-left py-2 pr-6 text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
-                    style={{ color: "#475569" }}
+                    style={{ color: "var(--text-secondary)" }}
                   >
                     {h}
                   </th>
@@ -503,11 +537,19 @@ export default function PipelinePage() {
               {monthly.map((m, i) => (
                 <tr
                   key={m.month}
-                  style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}
+                  style={{ borderBottom: "1px solid var(--separator-color)" }}
                   className="group"
                 >
-                  <td className="py-3 pr-6 font-bold text-white">{m.month}</td>
-                  <td className="py-3 pr-6" style={{ color: "#64748b" }}>
+                  <td
+                    className="py-3 font-bold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {m.month}
+                  </td>
+                  <td
+                    className="py-3 pr-6"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {m.days}
                   </td>
                   <td
@@ -537,7 +579,10 @@ export default function PipelinePage() {
                       {m.totalPrecip} mm
                     </span>
                   </td>
-                  <td className="py-3 pr-6" style={{ color: "#94a3b8" }}>
+                  <td
+                    className="py-3 pr-6"
+                    style={{ color: "var(--chart-axis)" }}
+                  >
                     {m.rainyDays}
                   </td>
                   <td className="py-3" style={{ color: "#10b981" }}>

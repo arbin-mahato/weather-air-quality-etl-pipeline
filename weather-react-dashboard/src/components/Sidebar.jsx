@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useWeatherContext } from "../contexts/WeatherContext";
 import {
   LayoutDashboard,
   Thermometer,
@@ -23,6 +24,7 @@ const NAV = [
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {
+  const { city } = useWeatherContext();
   const w = collapsed ? 64 : 240;
 
   return (
@@ -31,8 +33,8 @@ export default function Sidebar({ collapsed, onToggle }) {
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-20 flex-shrink-0 h-screen flex flex-col"
       style={{
-        background: "rgba(6,14,26,0.98)",
-        borderRight: "1px solid rgba(255,255,255,0.07)",
+        background: "var(--sidebar-bg)",
+        borderRight: "1px solid var(--sidebar-border)",
         overflow: "hidden",
       }}
     >
@@ -59,11 +61,17 @@ export default function Sidebar({ collapsed, onToggle }) {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="font-bold text-sm text-white leading-tight">
+              <div
+                className="font-bold text-sm leading-tight"
+                style={{ color: "var(--text-primary)" }}
+              >
                 WeatherSight
               </div>
-              <div className="text-xs mt-0.5" style={{ color: "#475569" }}>
-                Ioannina · 2024
+              <div
+                className="text-xs mt-0.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {city} · 2024
               </div>
             </motion.div>
           )}
@@ -110,7 +118,7 @@ export default function Sidebar({ collapsed, onToggle }) {
       {/* Bottom: location + collapse btn */}
       <div
         className="mt-auto border-t px-3 py-4 space-y-3"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+        style={{ borderColor: "var(--sidebar-border)" }}
       >
         {/* City tag */}
         {!collapsed && (
@@ -122,9 +130,7 @@ export default function Sidebar({ collapsed, onToggle }) {
           >
             <MapPin size={13} className="text-slate-500 flex-shrink-0" />
             <div>
-              <div className="text-xs font-semibold text-slate-400">
-                Ioannina, Greece
-              </div>
+              <div className="text-xs font-semibold text-slate-400">{city}</div>
               <div className="text-xs text-slate-600">Jun 3 – Sep 3, 2024</div>
             </div>
           </motion.div>
@@ -132,8 +138,11 @@ export default function Sidebar({ collapsed, onToggle }) {
         {/* Collapse toggle */}
         <button
           onClick={onToggle}
-          className="w-full flex items-center justify-center gap-2 rounded-xl py-2 text-slate-500 hover:text-slate-300 transition-colors"
-          style={{ background: "rgba(255,255,255,0.04)" }}
+          className="w-full flex items-center justify-center gap-2 rounded-xl py-2 transition-colors"
+          style={{
+            background: "var(--btn-ghost-bg)",
+            color: "var(--text-secondary)",
+          }}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (

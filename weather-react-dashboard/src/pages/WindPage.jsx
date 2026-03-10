@@ -20,8 +20,8 @@ import KPICard from "../components/KPICard";
 import ChartCard from "../components/ChartCard";
 import ChartTooltip from "../components/ChartTooltip";
 
-const axisStyle = { fill: "#475569", fontSize: 11 };
-const gridProps = { stroke: "rgba(255,255,255,0.04)", strokeDasharray: "3 3" };
+const axisStyle = { fill: "var(--chart-axis)", fontSize: 11 };
+const gridProps = { stroke: "var(--chart-grid)", strokeDasharray: "3 3" };
 
 export default function WindPage() {
   const { data, stats, monthly, windDist: dist } = useWeatherData();
@@ -105,7 +105,7 @@ export default function WindPage() {
               dataKey="date"
               tickFormatter={fmt}
               tick={axisStyle}
-              axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+              axisLine={{ stroke: "var(--chart-axis-line)" }}
               tickLine={false}
               interval={5}
             />
@@ -154,7 +154,7 @@ export default function WindPage() {
               <XAxis
                 dataKey="label"
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
               />
               <YAxis tick={axisStyle} axisLine={false} tickLine={false} />
@@ -197,7 +197,7 @@ export default function WindPage() {
                 name="Temperature"
                 tickFormatter={(v) => `${v}°`}
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
                 type="number"
                 domain={[18, 32]}
@@ -214,7 +214,7 @@ export default function WindPage() {
               <Tooltip
                 cursor={{
                   strokeDasharray: "3 3",
-                  stroke: "rgba(255,255,255,0.1)",
+                  stroke: "var(--chart-grid)",
                 }}
                 content={({ active, payload }) => {
                   if (!active || !payload?.length) return null;
@@ -223,14 +223,19 @@ export default function WindPage() {
                     <div className="tooltip-glass">
                       <p
                         className="text-xs font-semibold mb-1.5"
-                        style={{ color: "#64748b" }}
+                        style={{ color: "var(--text-muted)" }}
                       >
                         {format(new Date(d.date), "MMM d, yyyy")}
                       </p>
-                      <div className="flex items-center gap-2 text-xs text-white">
+                      <div
+                        className="flex items-center gap-2 text-xs"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         <Thermometer size={11} style={{ color: "#f97316" }} />
                         <span>{d.temp}°C</span>
-                        <span style={{ color: "#334155" }}>·</span>
+                        <span style={{ color: "var(--text-secondary)" }}>
+                          ·
+                        </span>
                         <Wind size={11} style={{ color: "#10b981" }} />
                         <span>{d.wind} km/h</span>
                       </div>
@@ -261,7 +266,7 @@ export default function WindPage() {
               <XAxis
                 dataKey="month"
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
               />
               <YAxis tick={axisStyle} axisLine={false} tickLine={false} />
@@ -316,7 +321,10 @@ export default function WindPage() {
             ].map(({ label, value, color, pct }) => (
               <div key={label}>
                 <div className="flex justify-between mb-1">
-                  <span className="text-xs" style={{ color: "#94a3b8" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--chart-axis)" }}
+                  >
                     {label}
                   </span>
                   <span className="text-xs font-bold" style={{ color }}>
@@ -325,7 +333,7 @@ export default function WindPage() {
                 </div>
                 <div
                   className="w-full rounded-full h-1.5"
-                  style={{ background: "rgba(255,255,255,0.06)" }}
+                  style={{ background: "var(--wind-bar-track)" }}
                 >
                   <div
                     className="h-1.5 rounded-full transition-all duration-700"

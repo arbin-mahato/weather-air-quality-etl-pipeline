@@ -51,11 +51,11 @@ const GradientDefs = () => (
   </defs>
 );
 
-const axisStyle = { fill: "#475569", fontSize: 11 };
-const gridProps = { stroke: "rgba(255,255,255,0.04)", strokeDasharray: "3 3" };
+const axisStyle = { fill: "var(--chart-axis)", fontSize: 11 };
+const gridProps = { stroke: "var(--chart-grid)", strokeDasharray: "3 3" };
 
 export default function Overview() {
-  const { data, stats } = useWeatherData();
+  const { data, stats, city } = useWeatherData();
 
   const dryStreak = (() => {
     let max = 0,
@@ -94,12 +94,14 @@ export default function Overview() {
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <Sun size={18} className="text-amber-400" /> Ioannina Summer 2024
+            <h2
+              className="text-xl font-bold flex items-center gap-2"
+              style={{ color: "var(--text-primary)" }}
+            >
+              <Sun size={18} className="text-amber-400" /> {city} Summer 2024
             </h2>
-            <p className="text-sm mt-1" style={{ color: "#64748b" }}>
-              92-day meteorological analysis · Epirus, Greece · VisualCrossing
-              Weather API
+            <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+              92-day meteorological analysis · VisualCrossing Weather API
             </p>
           </div>
           <div className="flex gap-3 flex-wrap">
@@ -215,7 +217,7 @@ export default function Overview() {
               dataKey="date"
               tickFormatter={fmt}
               tick={axisStyle}
-              axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+              axisLine={{ stroke: "var(--chart-axis-line)" }}
               tickLine={false}
               interval={6}
             />
@@ -293,7 +295,7 @@ export default function Overview() {
                 dataKey="date"
                 tickFormatter={fmt}
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
                 interval={8}
               />
@@ -365,7 +367,7 @@ export default function Overview() {
                 dataKey="date"
                 tickFormatter={fmt}
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
                 interval={8}
               />
@@ -406,9 +408,13 @@ export default function Overview() {
           color="#a855f7"
           delay={0.25}
         >
-          <strong className="text-white">{stats.maxPrecip} mm</strong> of rain
-          on{" "}
-          <strong className="text-white">{fmtLong(stats.maxPrecipDay)}</strong>{" "}
+          <strong style={{ color: "var(--text-primary)" }}>
+            {stats.maxPrecip} mm
+          </strong>{" "}
+          of rain on{" "}
+          <strong style={{ color: "var(--text-primary)" }}>
+            {fmtLong(stats.maxPrecipDay)}
+          </strong>{" "}
           — the summer's heaviest single-day downpour.
         </InsightCard>
         <InsightCard
@@ -418,9 +424,14 @@ export default function Overview() {
           delay={0.3}
         >
           Longest rain-free run:{" "}
-          <strong className="text-white">{fmt(dryStreak.from)}</strong> →{" "}
-          <strong className="text-white">{fmt(dryStreak.to)}</strong> with zero
-          precipitation.
+          <strong style={{ color: "var(--text-primary)" }}>
+            {fmt(dryStreak.from)}
+          </strong>{" "}
+          →{" "}
+          <strong style={{ color: "var(--text-primary)" }}>
+            {fmt(dryStreak.to)}
+          </strong>{" "}
+          with zero precipitation.
         </InsightCard>
         <InsightCard
           icon={<Flame size={22} />}
@@ -428,9 +439,14 @@ export default function Overview() {
           color="#f97316"
           delay={0.35}
         >
-          <strong className="text-white">{hotDryDays} days</strong> above 28°C
-          with humidity below 50% — classic Mediterranean summer heat. Avg
-          humidity: <strong className="text-white">{stats.avgHumidity}%</strong>
+          <strong style={{ color: "var(--text-primary)" }}>
+            {hotDryDays} days
+          </strong>{" "}
+          above 28°C with humidity below 50% — classic Mediterranean summer
+          heat. Avg humidity:{" "}
+          <strong style={{ color: "var(--text-primary)" }}>
+            {stats.avgHumidity}%
+          </strong>
           .
         </InsightCard>
       </div>
