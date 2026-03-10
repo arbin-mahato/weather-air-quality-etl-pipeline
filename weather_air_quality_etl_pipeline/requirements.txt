@@ -1,24 +1,31 @@
-certifi==2024.8.30
-charset-normalizer==3.3.2
-greenlet==3.1.0
-idna==3.10
-numpy==2.0.2
-pandas==2.2.2
-psycopg2-binary==2.9.9
-python-dateutil==2.9.0.post0
-python-dotenv==1.0.1
-pytz==2024.2
-requests==2.32.3
-six==1.16.0
-SQLAlchemy==2.0.35
-typing_extensions==4.12.2
-tzdata==2024.1
-urllib3==2.2.3
+# Core data stack — use >=min,<next-major so pip always resolves a pre-built wheel
+numpy>=2.0,<3
+pandas>=2.2,<3
+python-dateutil>=2.9,<3
+pytz>=2024.1
+tzdata>=2024.1
+
+# HTTP
+requests>=2.32,<3
+certifi>=2024
+charset-normalizer>=3,<4
+idna>=3,<4
+urllib3>=2.2,<3
+
+# Database
+SQLAlchemy>=2.0,<3
+greenlet>=3,<4
+psycopg2-binary>=2.9,<3
+
+# Utilities
+python-dotenv>=1.0,<2
+six>=1.16
+typing_extensions>=4.12
 
 # Flask API
-Flask==3.0.3
-flask-cors==4.0.0
-APScheduler==3.10.4
+Flask>=3.0,<4
+flask-cors>=4.0,<5
+APScheduler>=3.10,<4
 
 # Production WSGI server (used by Render instead of Flask's dev server)
-gunicorn==22.0.0
+gunicorn>=22.0,<24
