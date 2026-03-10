@@ -42,7 +42,7 @@ export default function KPICard({
       </div>
       <div
         className="text-xs font-700 uppercase tracking-widest mb-2"
-        style={{ color: "#475569", letterSpacing: "0.09em" }}
+        style={{ color: "var(--text-secondary)", letterSpacing: "0.09em" }}
       >
         {label}
       </div>
@@ -53,7 +53,10 @@ export default function KPICard({
         {isNumber ? displayed : value}
         {unit}
       </div>
-      <div className="text-xs leading-snug" style={{ color: "#64748b" }}>
+      <div
+        className="text-xs leading-snug"
+        style={{ color: "var(--text-muted)" }}
+      >
         {sub}
       </div>
     </motion.div>

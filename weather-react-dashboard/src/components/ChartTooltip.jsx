@@ -10,7 +10,10 @@ export default function ChartTooltip({
   if (!active || !payload?.length) return null;
   return (
     <div className="tooltip-glass">
-      <p className="text-xs font-semibold mb-2.5" style={{ color: "#64748b" }}>
+      <p
+        className="text-xs font-semibold mb-2.5"
+        style={{ color: "var(--text-muted)" }}
+      >
         {isDate ? format(new Date(label), "MMM d, yyyy") : label}
       </p>
       {payload.map((entry, i) => (
@@ -19,10 +22,13 @@ export default function ChartTooltip({
             className="w-2 h-2 rounded-full flex-shrink-0"
             style={{ background: entry.color }}
           />
-          <span className="text-xs" style={{ color: "#94a3b8" }}>
+          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
             {entry.name}:
           </span>
-          <span className="text-xs font-bold text-white ml-auto pl-3">
+          <span
+            className="text-xs font-bold ml-auto pl-3"
+            style={{ color: "var(--text-primary)" }}
+          >
             {typeof entry.value === "number"
               ? entry.value.toFixed(1)
               : entry.value}

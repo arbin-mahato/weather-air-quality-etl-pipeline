@@ -21,7 +21,10 @@ export default function InsightCard({
         <div className="text-sm font-semibold mb-1" style={{ color }}>
           {title}
         </div>
-        <div className="text-xs leading-relaxed" style={{ color: "#64748b" }}>
+        <div
+          className="text-xs leading-relaxed"
+          style={{ color: "var(--text-muted)" }}
+        >
           {children}
         </div>
       </div>

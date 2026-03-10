@@ -11,7 +11,7 @@ export default function Layout({ children }) {
   return (
     <div
       className="flex h-screen overflow-hidden"
-      style={{ background: "#060e1a" }}
+      style={{ background: "var(--bg-base)" }}
     >
       {/* Ambient background blobs */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -23,7 +23,7 @@ export default function Layout({ children }) {
             top: -250,
             left: -250,
             background:
-              "radial-gradient(ellipse, rgba(56,189,248,0.055) 0%, transparent 65%)",
+              "radial-gradient(ellipse, var(--blob-cyan) 0%, transparent 65%)",
             filter: "blur(80px)",
           }}
         />
@@ -35,7 +35,7 @@ export default function Layout({ children }) {
             bottom: -250,
             right: -250,
             background:
-              "radial-gradient(ellipse, rgba(167,139,250,0.045) 0%, transparent 65%)",
+              "radial-gradient(ellipse, var(--blob-violet) 0%, transparent 65%)",
             filter: "blur(80px)",
           }}
         />
@@ -47,7 +47,7 @@ export default function Layout({ children }) {
             top: "45%",
             left: "45%",
             background:
-              "radial-gradient(ellipse, rgba(16,185,129,0.03) 0%, transparent 65%)",
+              "radial-gradient(ellipse, var(--blob-green) 0%, transparent 65%)",
             filter: "blur(60px)",
           }}
         />

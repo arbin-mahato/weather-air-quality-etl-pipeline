@@ -17,9 +17,17 @@ export default function ChartCard({
     >
       <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
         <div>
-          <div className="text-sm font-semibold text-white">{title}</div>
+          <div
+            className="text-sm font-semibold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            {title}
+          </div>
           {subtitle && (
-            <div className="text-xs mt-0.5" style={{ color: "#475569" }}>
+            <div
+              className="text-xs mt-0.5"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {subtitle}
             </div>
           )}
@@ -39,7 +47,10 @@ export default function ChartCard({
                     style={{ background: color }}
                   />
                 )}
-                <span className="text-xs" style={{ color: "#64748b" }}>
+                <span
+                  className="text-xs"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   {label}
                 </span>
               </div>

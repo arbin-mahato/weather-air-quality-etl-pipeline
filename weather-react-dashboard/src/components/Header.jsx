@@ -10,8 +10,11 @@ import {
   Search,
   ChevronDown,
   X,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { useWeatherContext } from "../contexts/WeatherContext";
+import { useTheme } from "../contexts/ThemeContext";
 
 const PAGE_META = {
   "/": { title: "Overview", sub: "Summer 2024 at a glance" },
@@ -34,6 +37,7 @@ export default function Header() {
   const meta = PAGE_META[pathname] ?? { title: "Dashboard", sub: "" };
   const isApi = source === "api";
 
+  const { isDark, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [dropPos, setDropPos] = useState({ top: 0, right: 0 });
@@ -81,14 +85,22 @@ export default function Header() {
     <header
       className="flex items-center justify-between px-6 py-4 flex-shrink-0"
       style={{
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        background: "rgba(6,14,26,0.85)",
+        borderBottom: "1px solid var(--header-border)",
+        background: "var(--header-bg)",
         backdropFilter: "blur(16px)",
       }}
     >
       <div>
-        <h1 className="text-lg font-700 text-white font-bold">{meta.title}</h1>
-        <p className="text-xs mt-0.5" style={{ color: "#475569" }}>
+        <h1
+          className="text-lg font-700 font-bold"
+          style={{ color: "var(--text-primary)" }}
+        >
+          {meta.title}
+        </h1>
+        <p
+          className="text-xs mt-0.5"
+          style={{ color: "var(--text-secondary)" }}
+        >
           {meta.sub}
         </p>
       </div>
@@ -103,9 +115,9 @@ export default function Header() {
             style={{
               background: open
                 ? "rgba(56,189,248,0.12)"
-                : "rgba(255,255,255,0.05)",
-              border: `1px solid ${open ? "rgba(56,189,248,0.35)" : "rgba(255,255,255,0.08)"}`,
-              color: "#e2e8f0",
+                : "var(--btn-ghost-bg)",
+              border: `1px solid ${open ? "rgba(56,189,248,0.35)" : "var(--btn-ghost-border)"}`,
+              color: "var(--text-primary)",
               cursor: "pointer",
               transition: "all .15s",
             }}
@@ -134,18 +146,18 @@ export default function Header() {
                   zIndex: 99999,
                   borderRadius: 16,
                   overflow: "hidden",
-                  background: "linear-gradient(145deg, #0d1f33, #0a1628)",
+                  background: "var(--bg-surface-solid)",
                   border: "1px solid rgba(56,189,248,0.18)",
                   boxShadow:
-                    "0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(56,189,248,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
+                    "0 32px 64px rgba(0,0,0,0.35), 0 0 0 1px rgba(56,189,248,0.06)",
                 }}
               >
                 {/* Search input */}
                 <div
                   className="flex items-center gap-2.5 px-3 py-2.5 m-2 rounded-xl"
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "var(--stats-pill-bg)",
+                    border: "1px solid var(--border-surface)",
                   }}
                 >
                   <Search
@@ -157,8 +169,8 @@ export default function Header() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search city…"
-                    className="flex-1 bg-transparent text-xs outline-none placeholder:text-slate-600"
-                    style={{ color: "#e2e8f0" }}
+                    className="flex-1 bg-transparent text-xs outline-none"
+                    style={{ color: "var(--text-primary)" }}
                   />
                   {search ? (
                     <button
@@ -167,18 +179,18 @@ export default function Header() {
                       style={{
                         width: 16,
                         height: 16,
-                        background: "rgba(255,255,255,0.08)",
+                        background: "var(--btn-ghost-bg)",
                         flexShrink: 0,
                       }}
                     >
-                      <X size={9} style={{ color: "#94a3b8" }} />
+                      <X size={9} style={{ color: "var(--text-secondary)" }} />
                     </button>
                   ) : (
                     <span
                       className="rounded px-1 font-mono"
                       style={{
-                        background: "rgba(255,255,255,0.05)",
-                        color: "#334155",
+                        background: "var(--btn-ghost-bg)",
+                        color: "var(--text-secondary)",
                         fontSize: 9,
                         lineHeight: "16px",
                       }}
@@ -192,7 +204,7 @@ export default function Header() {
                 {search && (
                   <div
                     className="px-3 pb-1 text-xs"
-                    style={{ color: "#334155" }}
+                    style={{ color: "var(--text-secondary)" }}
                   >
                     {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                   </div>
@@ -206,10 +218,12 @@ export default function Header() {
                   {filtered.length === 0 ? (
                     <div
                       className="px-4 py-5 text-xs text-center"
-                      style={{ color: "#475569" }}
+                      style={{ color: "var(--text-secondary)" }}
                     >
                       No cities match&nbsp;
-                      <span style={{ color: "#64748b" }}>"{search}"</span>
+                      <span style={{ color: "var(--text-muted)" }}>
+                        "{search}"
+                      </span>
                     </div>
                   ) : (
                     filtered.map((c) => {
@@ -220,7 +234,7 @@ export default function Header() {
                           onClick={() => selectCity(c.name)}
                           className="w-full text-left px-3 py-2 text-xs flex items-center gap-2.5 rounded-lg"
                           style={{
-                            color: active ? "#38bdf8" : "#94a3b8",
+                            color: active ? "#38bdf8" : "var(--text-tertiary)",
                             background: active
                               ? "rgba(56,189,248,0.1)"
                               : "transparent",
@@ -230,8 +244,9 @@ export default function Header() {
                           onMouseEnter={(e) => {
                             if (!active) {
                               e.currentTarget.style.background =
-                                "rgba(255,255,255,0.05)";
-                              e.currentTarget.style.color = "#e2e8f0";
+                                "var(--nav-hover-bg)";
+                              e.currentTarget.style.color =
+                                "var(--text-primary)";
                             }
                           }}
                           onMouseLeave={(e) => {
@@ -240,14 +255,14 @@ export default function Header() {
                               : "transparent";
                             e.currentTarget.style.color = active
                               ? "#38bdf8"
-                              : "#94a3b8";
+                              : "var(--text-tertiary)";
                           }}
                         >
                           <MapPin
                             size={11}
                             style={{
                               flexShrink: 0,
-                              color: active ? "#38bdf8" : "#334155",
+                              color: active ? "#38bdf8" : "var(--arrow-color)",
                             }}
                           />
                           <span className="flex-1 truncate">{c.name}</span>
@@ -272,14 +287,17 @@ export default function Header() {
                 <div
                   className="flex items-center justify-between px-4 py-2.5"
                   style={{
-                    borderTop: "1px solid rgba(255,255,255,0.05)",
-                    color: "#334155",
+                    borderTop: "1px solid var(--border-surface)",
+                    color: "var(--text-secondary)",
                   }}
                 >
                   <span className="text-xs">
                     {cities.length} cities available
                   </span>
-                  <span className="text-xs" style={{ color: "#1e3a5f" }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: "var(--arrow-color)" }}
+                  >
                     Jun – Sep 2024
                   </span>
                 </div>
@@ -288,13 +306,31 @@ export default function Header() {
             )}
         </div>
 
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center justify-center rounded-lg"
+          style={{
+            width: 32,
+            height: 32,
+            background: "var(--btn-ghost-bg)",
+            border: "1px solid var(--btn-ghost-border)",
+            color: "var(--btn-ghost-color)",
+            cursor: "pointer",
+            transition: "all .15s",
+          }}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDark ? <Sun size={14} /> : <Moon size={14} />}
+        </button>
+
         {/* Date range */}
         <div
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
           style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            color: "#94a3b8",
+            background: "var(--btn-ghost-bg)",
+            border: "1px solid var(--btn-ghost-border)",
+            color: "var(--text-tertiary)",
           }}
         >
           <Calendar size={12} />

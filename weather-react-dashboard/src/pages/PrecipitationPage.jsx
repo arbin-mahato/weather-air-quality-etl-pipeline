@@ -18,8 +18,8 @@ import KPICard from "../components/KPICard";
 import ChartCard from "../components/ChartCard";
 import ChartTooltip from "../components/ChartTooltip";
 
-const axisStyle = { fill: "#475569", fontSize: 11 };
-const gridProps = { stroke: "rgba(255,255,255,0.04)", strokeDasharray: "3 3" };
+const axisStyle = { fill: "var(--chart-axis)", fontSize: 11 };
+const gridProps = { stroke: "var(--chart-grid)", strokeDasharray: "3 3" };
 const monthColors = ["#818cf8", "#a855f7", "#7c3aed", "#6d28d9"];
 
 export default function PrecipitationPage() {
@@ -89,7 +89,7 @@ export default function PrecipitationPage() {
               dataKey="date"
               tickFormatter={fmt}
               tick={axisStyle}
-              axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+              axisLine={{ stroke: "var(--chart-axis-line)" }}
               tickLine={false}
               interval={6}
             />
@@ -148,7 +148,7 @@ export default function PrecipitationPage() {
                 dataKey="date"
                 tickFormatter={fmt}
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
                 interval={8}
               />
@@ -195,7 +195,7 @@ export default function PrecipitationPage() {
               <XAxis
                 dataKey="month"
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
               />
               <YAxis
@@ -249,7 +249,7 @@ export default function PrecipitationPage() {
               dataKey="date"
               tickFormatter={fmt}
               tick={axisStyle}
-              axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+              axisLine={{ stroke: "var(--chart-axis-line)" }}
               tickLine={false}
               interval={6}
             />
@@ -299,10 +299,16 @@ export default function PrecipitationPage() {
                   ["Avg Humidity", `${m.avgHumidity}%`],
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between">
-                    <span className="text-xs" style={{ color: "#475569" }}>
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {k}
                     </span>
-                    <span className="text-xs font-semibold text-white">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {v}
                     </span>
                   </div>

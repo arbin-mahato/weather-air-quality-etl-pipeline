@@ -135,6 +135,9 @@ venv.bak/
 weather_data.json
 transformed_weather_data.csv
 
+# Unused/stray asset — not referenced in source code
+bground.jpg
+
 # macOS
 .DS_Store
 

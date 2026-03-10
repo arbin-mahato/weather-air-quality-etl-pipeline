@@ -18,8 +18,8 @@ import ChartCard from "../components/ChartCard";
 import ChartTooltip from "../components/ChartTooltip";
 import KPICard from "../components/KPICard";
 
-const axisStyle = { fill: "#475569", fontSize: 11 };
-const gridProps = { stroke: "rgba(255,255,255,0.04)", strokeDasharray: "3 3" };
+const axisStyle = { fill: "var(--chart-axis)", fontSize: 11 };
+const gridProps = { stroke: "var(--chart-grid)", strokeDasharray: "3 3" };
 
 // Heat calendar color by temperature
 function tempColor(t) {
@@ -114,7 +114,7 @@ export default function TemperaturePage() {
               dataKey="date"
               tickFormatter={fmt}
               tick={axisStyle}
-              axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+              axisLine={{ stroke: "var(--chart-axis-line)" }}
               tickLine={false}
               interval={5}
             />
@@ -176,7 +176,7 @@ export default function TemperaturePage() {
               <XAxis
                 dataKey="month"
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
               />
               <YAxis
@@ -221,7 +221,7 @@ export default function TemperaturePage() {
               <XAxis
                 dataKey="label"
                 tick={axisStyle}
-                axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                axisLine={{ stroke: "var(--chart-axis-line)" }}
                 tickLine={false}
               />
               <YAxis tick={axisStyle} axisLine={false} tickLine={false} />
@@ -287,7 +287,7 @@ export default function TemperaturePage() {
           ].map(([l, c]) => (
             <div key={l} className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-sm" style={{ background: c }} />
-              <span className="text-xs" style={{ color: "#64748b" }}>
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                 {l}
               </span>
             </div>
@@ -311,7 +311,10 @@ export default function TemperaturePage() {
                         <th
                           key={h}
                           className="text-left pb-2 pr-4 font-semibold uppercase tracking-wider"
-                          style={{ color: "#475569", fontSize: "0.65rem" }}
+                          style={{
+                            color: "var(--text-secondary)",
+                            fontSize: "0.65rem",
+                          }}
                         >
                           {h}
                         </th>
@@ -324,15 +327,21 @@ export default function TemperaturePage() {
                     <tr
                       key={d.date}
                       className="border-t"
-                      style={{ borderColor: "rgba(255,255,255,0.04)" }}
+                      style={{ borderColor: "var(--separator-color)" }}
                     >
-                      <td className="py-2 pr-4 font-medium text-white">
+                      <td
+                        className="py-2 pr-4 font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {format(new Date(d.date), "MMM d")}
                       </td>
                       <td className="py-2 pr-4 font-bold" style={{ color }}>
                         {d.temperature}°C
                       </td>
-                      <td className="py-2 pr-4" style={{ color: "#94a3b8" }}>
+                      <td
+                        className="py-2 pr-4"
+                        style={{ color: "var(--chart-axis)" }}
+                      >
                         {d.feels_like}°C
                       </td>
                       <td className="py-2 pr-4" style={{ color: "#06b6d4" }}>

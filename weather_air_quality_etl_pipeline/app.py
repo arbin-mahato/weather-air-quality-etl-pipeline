@@ -11,6 +11,7 @@ Start with:
 
 import os
 import sys
+import time
 import datetime
 import threading
 import logging
@@ -114,6 +115,9 @@ def run_etl():
             errors.append(f"{city['name']}: {exc}")
             with _etl_lock:
                 etl_state["cities_done"] += 1
+
+        # Respect VisualCrossing free-tier rate limit (~1 req/s)
+        time.sleep(1)
 
     with _etl_lock:
         etl_state["current_city"] = None
