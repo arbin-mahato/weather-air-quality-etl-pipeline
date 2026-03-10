@@ -155,14 +155,9 @@ export function WeatherProvider({ children }) {
     setError(null);
     try {
       const rows = await api.weather(selectedCity);
-      if (rows?.length > 0) {
-        setData(rows);
-        setSource("api");
-      } else {
-        // city exists in list but no data loaded yet — show empty+static fallback
-        setData(staticData);
-        setSource("static");
-      }
+      // API is reachable — badge goes green regardless of whether rows exist yet
+      setSource("api");
+      setData(rows?.length > 0 ? rows : staticData);
     } catch (err) {
       setError(err.message);
       setSource("static");

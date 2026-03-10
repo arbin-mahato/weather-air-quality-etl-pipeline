@@ -5,9 +5,15 @@
 const BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function apiFetch(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, options);
-  if (!res.ok) throw new Error(`API ${path} → HTTP ${res.status}`);
-  return res.json();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000); // 15 s — covers Render cold-start
+  try {
+    const res = await fetch(`${BASE}${path}`, { signal: controller.signal, ...options });
+    if (!res.ok) throw new Error(`API ${path} → HTTP ${res.status}`);
+    return res.json();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export const api = {
