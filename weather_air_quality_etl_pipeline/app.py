@@ -36,7 +36,12 @@ from load import load_data_to_postgresql, ensure_table, create_database_engine
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])  # allow Vite dev server
+# Allow local dev server + the production frontend URL (set FRONTEND_URL env var on Render)
+_allowed_origins = ["http://localhost:5173"]
+_frontend_url = os.getenv("FRONTEND_URL")
+if _frontend_url:
+    _allowed_origins.append(_frontend_url)
+CORS(app, origins=_allowed_origins)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -297,5 +302,7 @@ def trigger_pipeline():
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000, use_reloader=False)
+    port = int(os.getenv("PORT", 8000))
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(debug=debug, host="0.0.0.0", port=port, use_reloader=False)
 

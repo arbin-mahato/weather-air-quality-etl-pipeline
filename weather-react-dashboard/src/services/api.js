@@ -1,8 +1,11 @@
-// All API calls go through Vite's proxy (/api → http://localhost:8000)
-// so no absolute URL or CORS headers needed in development.
+// In development, VITE_API_BASE_URL is unset so paths stay as /api/...
+// and Vite's proxy forwards them to http://localhost:8000.
+// In production (Vercel), set VITE_API_BASE_URL to the Render backend URL,
+// e.g. https://your-backend.onrender.com — requests go there directly.
+const BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function apiFetch(path, options = {}) {
-  const res = await fetch(path, options);
+  const res = await fetch(`${BASE}${path}`, options);
   if (!res.ok) throw new Error(`API ${path} → HTTP ${res.status}`);
   return res.json();
 }
