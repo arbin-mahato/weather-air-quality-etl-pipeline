@@ -33,12 +33,16 @@ def fetch_weather_data(city, start_date, end_date):
         return weather_data
 
     except requests.exceptions.HTTPError as http_err:
-        logger.error(f"HTTP error occurred: {http_err}")
-        raise
+        # Redact the API key from the URL before logging/raising to prevent
+        # key exposure in error messages returned by public endpoints.
+        status_code = http_err.response.status_code if http_err.response is not None else "unknown"
+        clean_msg = f"HTTP {status_code} error fetching weather data for {city}"
+        logger.error(clean_msg)
+        raise requests.exceptions.HTTPError(clean_msg) from None
 
     except Exception as err:
-        logger.error(f"An error occurred: {err}")
-        raise
+        logger.error(f"An error occurred fetching weather data for {city}: {type(err).__name__}")
+        raise type(err)(f"Failed to fetch weather data for {city}: {type(err).__name__}") from None
 
 def fetch_historical_air_quality_data(city, state, country, start_date, end_date):
     """
